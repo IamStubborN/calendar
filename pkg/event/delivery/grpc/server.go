@@ -2,7 +2,9 @@ package grpc
 
 import (
 	"context"
+
 	"github.com/IamStubborN/calendar/pkg/event"
+	"github.com/IamStubborN/calendar/pkg/logger"
 
 	"github.com/IamStubborN/calendar/models"
 	"github.com/IamStubborN/calendar/pkg/event/delivery/grpc/event_grpc"
@@ -13,12 +15,14 @@ import (
 )
 
 type Server struct {
-	Storage event.Repository
+	logger          logger.Repository
+	eventRepository event.Repository
 }
 
-func NewEventGRPCServer(storage event.Repository) *Server {
+func NewEventGRPCServer(logger logger.Repository, er event.Repository) *Server {
 	return &Server{
-		Storage: storage,
+		logger:          logger,
+		eventRepository: er,
 	}
 }
 
@@ -30,7 +34,7 @@ func (s *Server) Create(ctx context.Context, req *event_grpc.CreateRequest) (*ev
 		Date:        req.Event.Date,
 	}
 
-	ev, err := s.Storage.Create(ctx, ev)
+	ev, err := s.eventRepository.Create(ctx, ev)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +52,7 @@ func (s *Server) Create(ctx context.Context, req *event_grpc.CreateRequest) (*ev
 }
 
 func (s *Server) Read(ctx context.Context, req *event_grpc.ReadRequest) (*event_grpc.ReadResponse, error) {
-	ev, err := s.Storage.Read(ctx, req.Event_ID)
+	ev, err := s.eventRepository.Read(ctx, req.Event_ID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +75,7 @@ func (s *Server) Update(ctx context.Context, req *event_grpc.UpdateRequest) (*ev
 		Date:        req.Event.Date,
 	}
 
-	updated, err := s.Storage.Update(ctx, ev)
+	updated, err := s.eventRepository.Update(ctx, ev)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +86,7 @@ func (s *Server) Update(ctx context.Context, req *event_grpc.UpdateRequest) (*ev
 }
 
 func (s *Server) Delete(ctx context.Context, req *event_grpc.DeleteRequest) (*event_grpc.DeleteResponse, error) {
-	deleted, err := s.Storage.Delete(ctx, req.Event_ID)
+	deleted, err := s.eventRepository.Delete(ctx, req.Event_ID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +108,7 @@ func (s *Server) Run(ctx context.Context) error {
 
 	go func() {
 		<-ctx.Done()
+		s.logger.Info("event service closed")
 		gServer.GracefulStop()
 	}()
 

@@ -12,7 +12,6 @@ type (
 		Logger  Logger  `mapstructure:"logger"`
 		Storage Storage `mapstructure:"storage"`
 		Remind  Remind  `mapstructure:"remind"`
-		Notify  Notify  `mapstructure:"notify"`
 		Broker  Broker  `mapstructure:"broker"`
 	}
 
@@ -21,15 +20,12 @@ type (
 	}
 
 	Broker struct {
-		DSN     string `mapstructure:"dsn"`
-		Channel string `mapstructure:"channel"`
+		DSN   string `mapstructure:"dsn"`
+		Queue string `mapstructure:"queue"`
 	}
 
 	Remind struct {
 		Frequency time.Duration `mapstructure:"freq"`
-	}
-
-	Notify struct {
 	}
 
 	Storage struct {

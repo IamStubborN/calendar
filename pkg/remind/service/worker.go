@@ -6,9 +6,8 @@ import (
 	"time"
 
 	"github.com/IamStubborN/calendar/pkg/broker"
-	"github.com/IamStubborN/calendar/pkg/remind"
-
 	"github.com/IamStubborN/calendar/pkg/logger"
+	"github.com/IamStubborN/calendar/pkg/remind"
 	"github.com/IamStubborN/calendar/worker"
 )
 
@@ -61,6 +60,6 @@ func (rs *remindService) remindSchedule(ctx context.Context) {
 
 	rs.logger.WithFields("info", map[string]interface{}{
 		"service": "remind",
-		"events":  len(events),
+		"bytes":   len(data),
 	}, "successful published to broker")
 }

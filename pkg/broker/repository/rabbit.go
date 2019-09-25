@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/IamStubborN/calendar/pkg/broker"
 	"github.com/streadway/amqp"
 )
@@ -16,46 +18,19 @@ func NewBrokerRabbitMQ(ch *amqp.Channel) broker.Repository {
 }
 
 func (br *brokerRepository) Publish(queueName string, data []byte) error {
-	q, err := br.ch.QueueDeclare(
-		queueName, // name
-		true,      // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
-		nil,       // arguments
-	)
-	if err != nil {
-		return err
-	}
-
-	return br.ch.Publish(
-		q.Name,
-		queueName,
-		false,
-		false,
+	return br.ch.Publish("", queueName, false, false,
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        data,
 		})
 }
 
-func (br *brokerRepository) Receive(queueName string) ([]byte, error) {
-	q, err := br.ch.QueueDeclare(
-		queueName, // name
-		true,      // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
-		nil,       // arguments
-	)
-	if err != nil {
-		return nil, err
-	}
-
+func (br *brokerRepository) Receive(ctx context.Context, queueName string) (<-chan string, error) {
+	dataCh := make(chan string)
 	message, err := br.ch.Consume(
-		q.Name,
+		queueName,
 		"",
-		false,
+		true,
 		false,
 		false,
 		false,
@@ -65,7 +40,16 @@ func (br *brokerRepository) Receive(queueName string) ([]byte, error) {
 		return nil, err
 	}
 
-	data := <-message
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case data := <-message:
+				dataCh <- string(data.Body)
+			}
+		}
+	}()
 
-	return data.Body, err
+	return dataCh, nil
 }

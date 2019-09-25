@@ -20,6 +20,18 @@ func initializeBroker(cfg *config.Config, logger logger.Repository) broker.Repos
 		logger.Fatal(err)
 	}
 
+	_, err = ch.QueueDeclare(
+		cfg.Broker.Queue,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	br := repository.NewBrokerRabbitMQ(ch)
 	if err != nil {
 		logrus.Fatalln(err)

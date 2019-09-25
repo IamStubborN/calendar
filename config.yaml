@@ -8,9 +8,7 @@ storage:
 
 broker:
   dsn: amqp://guest:guest@localhost:5672
-  channel: remind
+  queue: remind
 
 remind:
-  freq: 5s
-
-notify:
+  freq: 1s

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/IamStubborN/calendar/pkg/broker"
 	"github.com/IamStubborN/calendar/pkg/logger"
@@ -21,14 +20,22 @@ func NewNotifyService(logger logger.Repository, br broker.Repository) worker.Wor
 	}
 }
 
-func (ns notifyService) Run(ctx context.Context) error {
+func (ns *notifyService) Run(ctx context.Context) error {
+	dataCh, err := ns.broker.Receive(ctx, "remind")
+	if err != nil {
+		return err
+	}
+
 	for {
 		select {
 		case <-ctx.Done():
 			ns.logger.Info("notify service closed")
 			return nil
-		case <-time.Tick(time.Second):
-			ns.logger.Info(ns.broker.Receive("remind"))
+		case data := <-dataCh:
+			ns.logger.WithFields("info", map[string]interface{}{
+				"service": "notify",
+				"bytes":   len(data),
+			}, "successful consumed from broker")
 		}
 	}
 }

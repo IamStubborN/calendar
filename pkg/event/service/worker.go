@@ -20,16 +20,13 @@ type eventService struct {
 func NewEventService(logger logger.Repository, storage event.Repository) (worker.Worker, error) {
 	client, err := grpc.NewEventGRPCClient(logger)
 	if err != nil {
-		logger.WithFields("fatal", map[string]interface{}{
-			"eventService": "error",
-			"type":         err,
-		}, "new event worker error")
+		return nil, err
 	}
 
 	return &eventService{
 		logger: logger,
 		client: client,
-		server: grpc.NewEventGRPCServer(storage),
+		server: grpc.NewEventGRPCServer(logger, storage),
 	}, nil
 }
 
