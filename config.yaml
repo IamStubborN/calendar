@@ -1,0 +1,16 @@
+logger:
+  level: info
+
+storage:
+  provider: postgres
+  dsn: user=postgres password=test dbname=calendar host=localhost port=5432 sslmode=disable
+  retry: 5
+
+broker:
+  dsn: amqp://guest:guest@localhost:5672
+  channel: remind
+
+remind:
+  freq: 5s
+
+notify:
