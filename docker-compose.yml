@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:alpine
+    container_name: calendar_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: calendar
+    ports:
+      - 5432:5432
+
+  calendar:
+    container_name: calendar_go
+    build: .
+    ports:
+      - 5672:5672
+      - 50051:50051
+    depends_on:
+      - db

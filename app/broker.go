@@ -22,7 +22,7 @@ func initializeBroker(cfg *config.Config, logger logger.Repository) broker.Repos
 
 	_, err = ch.QueueDeclare(
 		cfg.Broker.Queue,
-		false,
+		true,
 		false,
 		false,
 		false,

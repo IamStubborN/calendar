@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/IamStubborN/calendar/pkg/logger"
+	migrate "github.com/rubenv/sql-migrate"
 
 	"github.com/IamStubborN/calendar/config"
 	"github.com/jmoiron/sqlx"
@@ -19,6 +20,8 @@ func initializeSQLConn(cfg *config.Config, logger logger.Repository) (*sqlx.DB, 
 	if err := retryConnect(pool, cfg.Storage.Retry, logger); err != nil {
 		return nil, err
 	}
+
+	migrationLogic(pool, logger)
 
 	return pool, nil
 }
@@ -47,4 +50,17 @@ func retryConnect(pool *sqlx.DB, fatalRetry int, logger logger.Repository) error
 	}
 
 	return nil
+}
+
+func migrationLogic(db *sqlx.DB, logger logger.Repository) {
+	migrations := &migrate.FileMigrationSource{
+		Dir: "migrations",
+	}
+
+	_, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	logger.Info("migrations complete")
 }
