@@ -11,7 +11,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func initializeSQLConn(cfg *config.Config, logger logger.Repository) (*sqlx.DB, error) {
+func initializeSQLConn(cfg *config.Config, logger logger.UseCase) (*sqlx.DB, error) {
 	pool, err := sqlx.Open("postgres", cfg.Storage.DSN)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func initializeSQLConn(cfg *config.Config, logger logger.Repository) (*sqlx.DB, 
 	return pool, nil
 }
 
-func retryConnect(pool *sqlx.DB, fatalRetry int, logger logger.Repository) error {
+func retryConnect(pool *sqlx.DB, fatalRetry int, logger logger.UseCase) error {
 	var retryCount int
 	for range time.NewTicker(time.Second).C {
 		if fatalRetry == retryCount {
@@ -52,7 +52,7 @@ func retryConnect(pool *sqlx.DB, fatalRetry int, logger logger.Repository) error
 	return nil
 }
 
-func migrationLogic(db *sqlx.DB, logger logger.Repository) {
+func migrationLogic(db *sqlx.DB, logger logger.UseCase) {
 	migrations := &migrate.FileMigrationSource{
 		Dir: "migrations",
 	}

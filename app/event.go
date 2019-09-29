@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func initializeEventService(logger logger.Repository, er event.Repository) worker.Worker {
+func initializeEventService(logger logger.UseCase, er event.Repository) worker.Worker {
 	EService, err := service.NewEventService(logger, er)
 	if err != nil {
 		logger.Fatal(err)

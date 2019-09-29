@@ -12,12 +12,12 @@ import (
 )
 
 type eventService struct {
-	logger logger.Repository
+	logger logger.UseCase
 	client *grpc.Client
 	server *grpc.Server
 }
 
-func NewEventService(logger logger.Repository, storage event.Repository) (worker.Worker, error) {
+func NewEventService(logger logger.UseCase, storage event.Repository) (worker.Worker, error) {
 	client, err := grpc.NewEventGRPCClient(logger)
 	if err != nil {
 		return nil, err

@@ -15,11 +15,11 @@ import (
 )
 
 type Server struct {
-	logger          logger.Repository
+	logger          logger.UseCase
 	eventRepository event.Repository
 }
 
-func NewEventGRPCServer(logger logger.Repository, er event.Repository) *Server {
+func NewEventGRPCServer(logger logger.UseCase, er event.Repository) *Server {
 	return &Server{
 		logger:          logger,
 		eventRepository: er,

@@ -1,17 +1,20 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/IamStubborN/calendar/config"
 	"github.com/IamStubborN/calendar/pkg/broker"
-	"github.com/IamStubborN/calendar/pkg/broker/repository"
+	"github.com/IamStubborN/calendar/pkg/broker/usecase"
 	"github.com/IamStubborN/calendar/pkg/logger"
 	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 )
 
-func initializeBroker(cfg *config.Config, logger logger.Repository) broker.Repository {
+func initializeBroker(cfg *config.Config, logger logger.UseCase) broker.Repository {
 	conn, err := amqp.Dial(cfg.Broker.DSN)
 	if err != nil {
+		fmt.Print(1)
 		logger.Fatal(err)
 	}
 
@@ -32,7 +35,7 @@ func initializeBroker(cfg *config.Config, logger logger.Repository) broker.Repos
 		logger.Fatal(err)
 	}
 
-	br := repository.NewBrokerRabbitMQ(ch)
+	br := usecase.NewBrokerRabbitMQ(ch)
 	if err != nil {
 		logrus.Fatalln(err)
 	}

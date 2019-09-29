@@ -14,7 +14,7 @@ import (
 )
 
 type App struct {
-	Logger  logger.Repository
+	Logger  logger.UseCase
 	Workers []worker.Worker
 }
 

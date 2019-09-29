@@ -1,6 +1,6 @@
 package logger
 
-type Repository interface {
+type UseCase interface {
 	Info(...interface{})
 	Warn(...interface{})
 	Fatal(...interface{})
