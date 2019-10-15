@@ -12,17 +12,6 @@ services:
     ports:
       - 5432:5432
 
-  calendar:
-    container_name: calendar_go
-    build: .
-    restart: on-failure
-    ports:
-      - 5672:5672
-      - 50051:50051
-    depends_on:
-      - db
-      - rabbitmq
-
   rabbitmq:
     container_name: calendar_amqp
     image: rabbitmq
@@ -30,3 +19,34 @@ services:
     command: rabbitmq-server
     ports:
       - 5672
+
+  api:
+    container_name: calendar_api
+    build: api
+    restart: on-failure
+    ports:
+      - 50051:50051
+    depends_on:
+      - db
+      - rabbitmq
+
+  reminder:
+    container_name: calendar_reminder
+    build: reminder
+    restart: on-failure
+    ports:
+      - 5672:5672
+    depends_on:
+      - db
+      - rabbitmq
+
+  notifier:
+    container_name: calendar_notifier
+    build: notifier
+    restart: on-failure
+    ports:
+      - 5672:5672
+    depends_on:
+      - db
+      - rabbitmq
+

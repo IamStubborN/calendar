@@ -1,0 +1,16 @@
+# build stage
+FROM golang:alpine as builder
+RUN apk add git
+WORKDIR /github.com/IamStubborN/calendar/api
+COPY . .
+ENV GO111MODULE=on
+ENV CGO_ENABLED=0
+RUN go build -o api ./cmd
+
+# final stage
+FROM alpine:latest
+WORKDIR /root/petstore/
+COPY --from=builder /github.com/IamStubborN/calendar/api .
+COPY --from=builder /github.com/IamStubborN/calendar/api/config.yaml .
+
+ENTRYPOINT ["./api"]
