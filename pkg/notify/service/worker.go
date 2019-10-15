@@ -9,11 +9,11 @@ import (
 )
 
 type notifyService struct {
-	logger logger.Repository
+	logger logger.UseCase
 	broker broker.Repository
 }
 
-func NewNotifyService(logger logger.Repository, br broker.Repository) worker.Worker {
+func NewNotifyService(logger logger.UseCase, br broker.Repository) worker.Worker {
 	return &notifyService{
 		logger: logger,
 		broker: br,

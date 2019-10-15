@@ -10,11 +10,11 @@ import (
 )
 
 type Client struct {
-	logger logger.Repository
+	logger logger.UseCase
 	gc     event_grpc.EventServiceClient
 }
 
-func NewEventGRPCClient(logger logger.Repository) (*Client, error) {
+func NewEventGRPCClient(logger logger.UseCase) (*Client, error) {
 	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		return nil, err

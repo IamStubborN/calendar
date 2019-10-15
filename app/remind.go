@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func initializeRemindService(freq time.Duration, logger logger.Repository, rr remind.Repository, br broker.Repository) worker.Worker {
+func initializeRemindService(freq time.Duration, logger logger.UseCase, rr remind.Repository, br broker.Repository) worker.Worker {
 	RService, err := service.NewRemindService(freq, logger, rr, br)
 	if err != nil {
 		logger.Fatal(err)

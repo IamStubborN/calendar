@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:alpine
+    container_name: calendar_db
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: calendar
+    ports:
+      - 5432:5432
+
+  calendar:
+    container_name: calendar_go
+    build: .
+    restart: on-failure
+    ports:
+      - 5672:5672
+      - 50051:50051
+    depends_on:
+      - db
+      - rabbitmq
+
+  rabbitmq:
+    container_name: calendar_amqp
+    image: rabbitmq
+    restart: on-failure
+    command: rabbitmq-server
+    ports:
+      - 5672

@@ -7,6 +7,6 @@ import (
 	"github.com/IamStubborN/calendar/worker"
 )
 
-func initializeNotifyService(logger logger.Repository, br broker.Repository) worker.Worker {
+func initializeNotifyService(logger logger.UseCase, br broker.Repository) worker.Worker {
 	return service.NewNotifyService(logger, br)
 }

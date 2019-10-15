@@ -6,9 +6,9 @@
 
 # Commands
     all:
-		go mod vendor
+		go mod tidy
 		go test -v ./...
-		go build -o $(BINARY_NAME) -mod=vendor $(MAIN)
+		go build -o $(BINARY_NAME) $(MAIN)
     build:
 		go build -o $(BINARY_NAME) -v $(MAIN)
     test:
