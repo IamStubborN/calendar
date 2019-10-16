@@ -1,6 +1,6 @@
 module github.com/IamStubborN/calendar/reminder
 
-go 1.13
+go 1.12
 
 require (
 	github.com/jmoiron/sqlx v1.2.0

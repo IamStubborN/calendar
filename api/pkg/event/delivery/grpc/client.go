@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"github.com/IamStubborN/calendar/api/pkg/event/delivery/grpc/event_grpc"
+	"github.com/IamStubborN/calendar/api/pkg/event/delivery/grpc/entries"
 	"github.com/IamStubborN/calendar/api/pkg/logger"
 
 	"google.golang.org/grpc"
@@ -11,7 +11,7 @@ import (
 
 type Client struct {
 	logger logger.UseCase
-	gc     event_grpc.EventServiceClient
+	gc     entries.EventServiceClient
 }
 
 func NewEventGRPCClient(logger logger.UseCase) (*Client, error) {
@@ -22,12 +22,12 @@ func NewEventGRPCClient(logger logger.UseCase) (*Client, error) {
 
 	return &Client{
 		logger: logger,
-		gc:     event_grpc.NewEventServiceClient(cc),
+		gc:     entries.NewEventServiceClient(cc),
 	}, nil
 }
 
 func (c *Client) Run(ctx context.Context) error {
-	ev := &event_grpc.Event{
+	ev := &entries.Event{
 		ID:          0,
 		Name:        "First event",
 		Description: "This is my first event with grpc",
@@ -81,8 +81,8 @@ func (c *Client) Run(ctx context.Context) error {
 	return nil
 }
 
-func (c *Client) Create(ctx context.Context, ev *event_grpc.Event) (*event_grpc.Event, error) {
-	resp, err := c.gc.Create(ctx, &event_grpc.CreateRequest{
+func (c *Client) Create(ctx context.Context, ev *entries.Event) (*entries.Event, error) {
+	resp, err := c.gc.Create(ctx, &entries.CreateRequest{
 		Event: ev,
 	})
 
@@ -93,8 +93,8 @@ func (c *Client) Create(ctx context.Context, ev *event_grpc.Event) (*event_grpc.
 	return resp.Event, nil
 }
 
-func (c *Client) Read(ctx context.Context, eventID uint64) (*event_grpc.Event, error) {
-	resp, err := c.gc.Read(ctx, &event_grpc.ReadRequest{
+func (c *Client) Read(ctx context.Context, eventID uint64) (*entries.Event, error) {
+	resp, err := c.gc.Read(ctx, &entries.ReadRequest{
 		Event_ID: eventID,
 	})
 
@@ -105,8 +105,8 @@ func (c *Client) Read(ctx context.Context, eventID uint64) (*event_grpc.Event, e
 	return resp.Event, nil
 }
 
-func (c *Client) Update(ctx context.Context, ev *event_grpc.Event) (bool, error) {
-	resp, err := c.gc.Update(ctx, &event_grpc.UpdateRequest{
+func (c *Client) Update(ctx context.Context, ev *entries.Event) (bool, error) {
+	resp, err := c.gc.Update(ctx, &entries.UpdateRequest{
 		Event: ev,
 	})
 	if err != nil {
@@ -117,7 +117,7 @@ func (c *Client) Update(ctx context.Context, ev *event_grpc.Event) (bool, error)
 }
 
 func (c *Client) Delete(ctx context.Context, eventID uint64) (bool, error) {
-	resp, err := c.gc.Delete(ctx, &event_grpc.DeleteRequest{
+	resp, err := c.gc.Delete(ctx, &entries.DeleteRequest{
 		Event_ID: eventID,
 	})
 	if err != nil {

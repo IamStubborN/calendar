@@ -1,8 +1,6 @@
 package config
 
 import (
-	"time"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -11,21 +9,10 @@ type (
 	Config struct {
 		Logger  Logger  `mapstructure:"logger"`
 		Storage Storage `mapstructure:"storage"`
-		Remind  Remind  `mapstructure:"remind"`
-		Broker  Broker  `mapstructure:"broker"`
 	}
 
 	Logger struct {
 		Level string `mapstructure:"level"`
-	}
-
-	Broker struct {
-		DSN   string `mapstructure:"dsn"`
-		Queue string `mapstructure:"queue"`
-	}
-
-	Remind struct {
-		Frequency time.Duration `mapstructure:"freq"`
 	}
 
 	Storage struct {

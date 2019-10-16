@@ -13,7 +13,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func initializeRemindService(freq time.Duration, logger logger.UseCase, rr remind.Repository, br broker.Repository) worker.Worker {
+func initializeRemindService(
+	freq time.Duration,
+	logger logger.UseCase,
+	rr remind.Repository,
+	br broker.Repository) worker.Worker {
 	RService, err := service.NewRemindService(freq, logger, rr, br)
 	if err != nil {
 		logger.Fatal(err)
@@ -24,8 +28,7 @@ func initializeRemindService(freq time.Duration, logger logger.UseCase, rr remin
 
 func initializeRemindRepository(cfg *config.Config, pool *sqlx.DB) remind.Repository {
 	var storage remind.Repository
-	switch cfg.Storage.Provider {
-	case "postgres":
+	if cfg.Storage.Provider == "postgres" {
 		storage = repository.NewRemindRepositoryPSQL(pool)
 	}
 

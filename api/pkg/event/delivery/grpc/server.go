@@ -7,7 +7,7 @@ import (
 	"github.com/IamStubborN/calendar/api/pkg/logger"
 
 	"github.com/IamStubborN/calendar/api/models"
-	"github.com/IamStubborN/calendar/api/pkg/event/delivery/grpc/event_grpc"
+	"github.com/IamStubborN/calendar/api/pkg/event/delivery/grpc/entries"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -26,7 +26,7 @@ func NewEventGRPCServer(logger logger.UseCase, er event.Repository) *Server {
 	}
 }
 
-func (s *Server) Create(ctx context.Context, req *event_grpc.CreateRequest) (*event_grpc.CreateResponse, error) {
+func (s *Server) Create(ctx context.Context, req *entries.CreateRequest) (*entries.CreateResponse, error) {
 	ev := &models.Event{
 		ID:          req.Event.ID,
 		Name:        req.Event.Name,
@@ -39,35 +39,35 @@ func (s *Server) Create(ctx context.Context, req *event_grpc.CreateRequest) (*ev
 		return nil, err
 	}
 
-	gEvent := &event_grpc.Event{
+	gEvent := &entries.Event{
 		ID:          ev.ID,
 		Name:        ev.Name,
 		Description: ev.Description,
 		Date:        ev.Date,
 	}
 
-	return &event_grpc.CreateResponse{
+	return &entries.CreateResponse{
 		Event: gEvent,
 	}, nil
 }
 
-func (s *Server) Read(ctx context.Context, req *event_grpc.ReadRequest) (*event_grpc.ReadResponse, error) {
+func (s *Server) Read(ctx context.Context, req *entries.ReadRequest) (*entries.ReadResponse, error) {
 	ev, err := s.eventRepository.Read(ctx, req.Event_ID)
 	if err != nil {
 		return nil, err
 	}
 
-	gEvent := &event_grpc.Event{
+	gEvent := &entries.Event{
 		ID:          ev.ID,
 		Name:        ev.Name,
 		Description: ev.Description,
 		Date:        ev.Date,
 	}
 
-	return &event_grpc.ReadResponse{Event: gEvent}, nil
+	return &entries.ReadResponse{Event: gEvent}, nil
 }
 
-func (s *Server) Update(ctx context.Context, req *event_grpc.UpdateRequest) (*event_grpc.UpdateResponse, error) {
+func (s *Server) Update(ctx context.Context, req *entries.UpdateRequest) (*entries.UpdateResponse, error) {
 	ev := &models.Event{
 		ID:          req.Event.ID,
 		Name:        req.Event.Name,
@@ -80,18 +80,18 @@ func (s *Server) Update(ctx context.Context, req *event_grpc.UpdateRequest) (*ev
 		return nil, err
 	}
 
-	return &event_grpc.UpdateResponse{
+	return &entries.UpdateResponse{
 		Updated: updated,
 	}, nil
 }
 
-func (s *Server) Delete(ctx context.Context, req *event_grpc.DeleteRequest) (*event_grpc.DeleteResponse, error) {
+func (s *Server) Delete(ctx context.Context, req *entries.DeleteRequest) (*entries.DeleteResponse, error) {
 	deleted, err := s.eventRepository.Delete(ctx, req.Event_ID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &event_grpc.DeleteResponse{
+	return &entries.DeleteResponse{
 		Deleted: deleted,
 	}, nil
 }
@@ -104,7 +104,7 @@ func (s *Server) Run(ctx context.Context) error {
 
 	gServer := grpc.NewServer()
 	reflection.Register(gServer)
-	event_grpc.RegisterEventServiceServer(gServer, s)
+	entries.RegisterEventServiceServer(gServer, s)
 
 	go func() {
 		<-ctx.Done()

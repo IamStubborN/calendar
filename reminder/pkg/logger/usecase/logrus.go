@@ -40,8 +40,10 @@ func (l *log) Fatal(data ...interface{}) {
 }
 
 func (l *log) WithFields(level string, data map[string]interface{}, msg ...interface{}) {
-	lvl := logrus.InfoLevel
-	lvl, _ = logrus.ParseLevel(level)
+	lvl, err := logrus.ParseLevel(level)
+	if err != nil {
+		lvl = logrus.InfoLevel
+	}
 
 	l.logger.WithFields(data).Log(lvl, msg...)
 }

@@ -1,6 +1,6 @@
 module github.com/IamStubborN/calendar/api
 
-go 1.13
+go 1.12
 
 require (
 	github.com/gobuffalo/packr v1.30.1 // indirect

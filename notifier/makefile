@@ -1,5 +1,5 @@
 # Go parameters
-    BINARY_NAME=calendar
+    BINARY_NAME=notifier
 
 # Main package
     MAIN=./cmd

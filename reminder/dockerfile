@@ -1,6 +1,6 @@
 # build stage
 FROM golang:alpine as builder
-RUN apk add git
+RUN apk add --no-cache git
 WORKDIR /github.com/IamStubborN/calendar/reminder
 COPY . .
 ENV GO111MODULE=on

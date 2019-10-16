@@ -53,7 +53,7 @@ func retryConnect(pool *sqlx.DB, fatalRetry int, logger logger.UseCase) error {
 
 func migrationLogic(db *sqlx.DB, logger logger.UseCase) {
 	migrations := &migrate.FileMigrationSource{
-		Dir: "api/migrations",
+		Dir: "migrations",
 	}
 
 	_, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)

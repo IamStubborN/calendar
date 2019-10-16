@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package event_grpc;
+package entries;
 
 service EventService {
     rpc Create(CreateRequest) returns (CreateResponse);

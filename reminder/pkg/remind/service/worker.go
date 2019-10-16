@@ -18,7 +18,11 @@ type remindService struct {
 	broker broker.Repository
 }
 
-func NewRemindService(freq time.Duration, logger logger.UseCase, rr remind.Repository, br broker.Repository) (worker.Worker, error) {
+func NewRemindService(
+	freq time.Duration,
+	logger logger.UseCase,
+	rr remind.Repository,
+	br broker.Repository) (worker.Worker, error) {
 	return &remindService{
 		freq:   freq,
 		logger: logger,
@@ -33,7 +37,7 @@ func (rs *remindService) Run(ctx context.Context) error {
 		case <-ctx.Done():
 			rs.logger.Info("remind service closed")
 			return nil
-		case <-time.Tick(rs.freq):
+		case <-time.NewTicker(rs.freq).C:
 			rs.remindSchedule(ctx)
 		}
 	}
