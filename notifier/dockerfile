@@ -9,7 +9,7 @@ RUN go build -o notifier ./cmd
 
 # final stage
 FROM alpine:latest
-WORKDIR /root/petstore/
+WORKDIR /root/calendar/
 COPY --from=builder /github.com/IamStubborN/calendar/notifier .
 COPY --from=builder /github.com/IamStubborN/calendar/notifier/config.yaml .
 

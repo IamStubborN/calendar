@@ -5,11 +5,12 @@ WORKDIR /github.com/IamStubborN/calendar/api
 COPY . .
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
+RUN go mod download
 RUN go build -o api ./cmd
 
 # final stage
 FROM alpine:latest
-WORKDIR /root/petstore/
+WORKDIR /root/calendar/
 COPY --from=builder /github.com/IamStubborN/calendar/api .
 COPY --from=builder /github.com/IamStubborN/calendar/api/config.yaml .
 

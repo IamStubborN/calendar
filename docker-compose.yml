@@ -22,7 +22,7 @@ services:
 
   api:
     container_name: calendar_api
-    build: api
+    build: api/
     restart: on-failure
     ports:
       - 50051:50051
@@ -32,20 +32,16 @@ services:
 
   reminder:
     container_name: calendar_reminder
-    build: reminder
+    build: reminder/
     restart: on-failure
-    ports:
-      - 5672:5672
     depends_on:
       - db
       - rabbitmq
 
   notifier:
     container_name: calendar_notifier
-    build: notifier
+    build: notifier/
     restart: on-failure
-    ports:
-      - 5672:5672
     depends_on:
       - db
       - rabbitmq
