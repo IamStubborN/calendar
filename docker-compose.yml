@@ -12,6 +12,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: test
       POSTGRES_DB: calendar
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d/
     networks:
       - net
 
