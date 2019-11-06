@@ -1,0 +1,6 @@
+logger:
+  level: info
+
+broker:
+  dsn: amqp://guest:guest@calendar_amqp:5672
+  queue: remind

@@ -1,0 +1,16 @@
+# build stage
+FROM golang:alpine as builder
+RUN apk add --no-cache git
+WORKDIR /github.com/IamStubborN/calendar/reminder
+COPY . .
+ENV GO111MODULE=on
+ENV CGO_ENABLED=0
+RUN go build -o reminder ./cmd
+
+# final stage
+FROM alpine:latest
+WORKDIR /root/calendar/
+COPY --from=builder /github.com/IamStubborN/calendar/reminder .
+COPY --from=builder /github.com/IamStubborN/calendar/reminder/config.yaml .
+
+ENTRYPOINT ["./reminder"]

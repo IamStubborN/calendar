@@ -1,5 +1,8 @@
 version: '3.7'
 
+networks:
+  net:
+
 services:
   db:
     image: postgres:alpine
@@ -9,24 +12,45 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: test
       POSTGRES_DB: calendar
-    ports:
-      - 5432:5432
-
-  calendar:
-    container_name: calendar_go
-    build: .
-    restart: on-failure
-    ports:
-      - 5672:5672
-      - 50051:50051
-    depends_on:
-      - db
-      - rabbitmq
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d/
+    networks:
+      - net
 
   rabbitmq:
     container_name: calendar_amqp
     image: rabbitmq
     restart: on-failure
     command: rabbitmq-server
-    ports:
-      - 5672
+    networks:
+      - net
+
+  api:
+    container_name: calendar_api
+    build: api/
+    restart: on-failure
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - net
+
+  reminder:
+    build: reminder/
+    restart: on-failure
+    container_name: calendar_reminder
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - net
+
+  notifier:
+    container_name: calendar_notifier
+    restart: on-failure
+    build: notifier/
+    depends_on:
+      - db
+      - rabbitmq
+    networks:
+      - net

@@ -1,5 +1,3 @@
--- +migrate Up
--- +migrate StatementBegin
 set search_path=public;
 create schema if not exists public;
 create table if not exists events
@@ -14,10 +12,3 @@ create table if not exists events
 
 create unique index if not exists events_id_uindex
     on events (id);
-
--- +migrate StatementEnd
-
--- +migrate Down
--- +migrate StatementBegin
-drop table if exists events;
--- +migrate StatementEnd
